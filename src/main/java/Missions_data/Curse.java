@@ -1,9 +1,8 @@
 package Missions_data;
 
 
-import jakarta.xml.bind.annotation.XmlAccessType;
-import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlElement;
+import Missions_data.Enums.ThreatLevel;
+import jakarta.xml.bind.annotation.*;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Curse {
@@ -12,7 +11,7 @@ public class Curse {
     private String name;
 
     @XmlElement
-    private String threatLevel;
+    private ThreatLevel threatLevel;
 
     public void setName(String name){
         this.name = name;
@@ -22,11 +21,12 @@ public class Curse {
         return name;
     }
 
-    public void setThreatLevel(String threatLevel){
+    public void setThreatLevel(ThreatLevel threatLevel){
         this.threatLevel = threatLevel;
     }
 
-    public String getThreatLevel() {
+    public ThreatLevel getThreatLevel() {
         return threatLevel;
     }
+
 }

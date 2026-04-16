@@ -1,4 +1,5 @@
 package Missions_data;
+import Missions_data.Enums.Outcome;
 import jakarta.xml.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -13,12 +14,10 @@ public class Mission {
 
     @XmlElement
     private String date;
-
-
     @XmlElement
     private String location;
     @XmlElement
-    private String outcome;
+    private Outcome outcome;
     @XmlElement(name = "damageCost")
     private int damageCost;
     @XmlElement(name = "curse")
@@ -29,10 +28,100 @@ public class Mission {
     @XmlElementWrapper(name = "techniques")
     @XmlElement(name = "technique")
     private List<Technique> techniques;
+    @XmlElement(name = "enemyActivity")
+    private EnemyActivity enemyActivity;
+    @XmlElement(name = "environment")
+    private Environment environment;
 
+    @XmlElement(name = "economicAssessment")
+    private EconomicAssessment economicAssessment;
+
+    @XmlElement(name = "civilianImpact")
+    private CivilianImpact civilianImpact;
 
     @XmlElement
     private String comment = "";
+
+    @XmlElementWrapper(name = "operationTimeline")
+    @XmlElement(name = "event")
+    private List<OperationEvent> operationTimeline;
+
+    @XmlElementWrapper(name = "operationTags")
+    @XmlElement(name = "tag")
+    private List<String> operationTags;
+
+    @XmlElementWrapper(name = "supportUnits")
+    @XmlElement(name = "unit")
+    private List<String> supportUnits;
+
+    @XmlElementWrapper(name = "recommendations")
+    @XmlElement(name = "recommendation")
+    private List<String> recommendations;
+
+    @XmlElement
+    private String notes;
+
+    @XmlElementWrapper(name = "artifactsRecovered")
+    @XmlElement(name = "artifact")
+    private List<String> artifactsRecovered;
+
+    @XmlElementWrapper(name = "evacuationZones")
+    @XmlElement(name = "zone")
+    private List<String> evacuationZones;
+
+    @XmlElementWrapper(name = "statusEffects")
+    @XmlElement(name = "effect")
+    private List<String> statusEffects;
+
+    public List<OperationEvent> getOperationTimeline() {
+        return operationTimeline;
+    }
+
+    public void setOperationTimeline(List<OperationEvent> operationTimeline) {
+        this.operationTimeline = operationTimeline;
+    }
+
+    public void addOperationEvent(OperationEvent event) {
+        if (this.operationTimeline == null) {
+            this.operationTimeline = new ArrayList<>();
+        }
+        this.operationTimeline.add(event);
+    }
+
+
+    public CivilianImpact getCivilianImpact(){
+        return civilianImpact;
+    }
+    public void setCivilianImpact(CivilianImpact civilianImpact){
+        this.civilianImpact = civilianImpact;
+    }
+    public void setEnvironment(Environment environment){
+        this.environment = environment;
+    }
+
+    public void setEconomicAssessment(EconomicAssessment economicAssessment){this.economicAssessment = economicAssessment;}
+
+    public Environment getEnvironment(){
+        return environment;
+    }
+
+
+
+    public EnemyActivity getEnemyActivity() {
+        return enemyActivity;
+    }
+
+    public void setEnemyActivity(EnemyActivity enemyActivity) {
+        this.enemyActivity = enemyActivity;
+    }
+
+    public EconomicAssessment getEconomicAssessment(){
+        return economicAssessment;
+    }
+
+
+
+
 
 
     public Mission() {}
@@ -61,11 +150,11 @@ public class Mission {
         return location;
     }
 
-    public void setOutcome(String outcome) {
+    public void setOutcome(Outcome outcome) {
         this.outcome = outcome;
     }
 
-    public String getOutcome() {
+    public Outcome getOutcome() {
         return outcome;
     }
 
@@ -88,6 +177,7 @@ public class Mission {
     public void setSorcerers(List<Sorcerer> sorcerers) {
         this.sorcerers = sorcerers;
     }
+    public void setTechniques(List<Technique> techniques){this.techniques = techniques;}
 
     public void setTechnique(List<Technique> techniques) {
         this.techniques = techniques;
@@ -109,49 +199,101 @@ public class Mission {
         this.comment = comment;
     }
 
-    public String getView() {
-        StringBuilder view = new StringBuilder();
-        view.append("Общая информация:\n\n");
-        view.append("missionId: ").append(getMissionId()).append("\n");
-
-        view.append("Дата: ").append(getDate()).append("\n");
-        view.append("Место: ").append(getLocation()).append("\n");
-        view.append("Результат: ").append(getOutcome()).append("\n");
-        view.append("Ущерб: ").append(getDamageCost()).append("\n\n");
-
-        view.append("Проклятие:\n\n");
-        view.append("Название: ").append(curse.getName()).append("\n");
-        view.append("Сила проклятия: ").append(curse.getThreatLevel()).append("\n\n");
-
-        if (getSorcerers() != null && !getSorcerers().isEmpty()) {
-            view.append("Колдуны:\n\n");
-            for (int i = 0; i < getSorcerers().size(); i++) {
-                Sorcerer s = getSorcerers().get(i);
-                view.append(i + 1).append("-ый Колдун:\n");
-                view.append("Имя: ").append(s.getName()).append("\n");
-                view.append("Ранг: ").append(s.getRank()).append("\n\n");
-            }
-        }
-
-        if (getTechniques() != null && !getTechniques().isEmpty()) {
-            view.append("Техники:\n\n");
-            for (int i = 0; i < getTechniques().size(); i++) {
-                Technique t = getTechniques().get(i);
-                view.append(i + 1).append("-ая Техника:\n");
-                view.append("Название: ").append(t.getName()).append("\n");
-                view.append("Тип: ").append(t.getType()).append("\n");
-                view.append("Владелец: ").append(t.getOwner()).append("\n");
-                view.append("Ущерб: ").append(t.getDamage()).append("\n\n");
-            }
-        }
-        if (!getComment().isEmpty()){
-            view.append("Комментарий: ").append(getComment());
-        }
-
-        return view.toString();
+    public List<String> getOperationTags() {
+        return operationTags;
     }
 
+    public void setOperationTags(List<String> operationTags) {
+        this.operationTags = operationTags;
+    }
 
+    public void addOperationTag(String tag) {
+        if (this.operationTags == null) {
+            this.operationTags = new ArrayList<>();
+        }
+        this.operationTags.add(tag);
+    }
 
+    public List<String> getSupportUnits() {
+        return supportUnits;
+    }
 
+    public void setSupportUnits(List<String> supportUnits) {
+        this.supportUnits = supportUnits;
+    }
+
+    public void addSupportUnit(String unit) {
+        if (this.supportUnits == null) {
+            this.supportUnits = new ArrayList<>();
+        }
+        this.supportUnits.add(unit);
+    }
+
+    public List<String> getRecommendations() {
+        return recommendations;
+    }
+
+    public void setRecommendations(List<String> recommendations) {
+        this.recommendations = recommendations;
+    }
+
+    public void addRecommendation(String recommendation) {
+        if (this.recommendations == null) {
+            this.recommendations = new ArrayList<>();
+        }
+        this.recommendations.add(recommendation);
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    public List<String> getArtifactsRecovered() {
+        return artifactsRecovered;
+    }
+
+    public void setArtifactsRecovered(List<String> artifactsRecovered) {
+        this.artifactsRecovered = artifactsRecovered;
+    }
+
+    public void addArtifact(String artifact) {
+        if (this.artifactsRecovered == null) {
+            this.artifactsRecovered = new ArrayList<>();
+        }
+        this.artifactsRecovered.add(artifact);
+    }
+
+    public List<String> getEvacuationZones() {
+        return evacuationZones;
+    }
+
+    public void setEvacuationZones(List<String> evacuationZones) {
+        this.evacuationZones = evacuationZones;
+    }
+
+    public void addEvacuationZone(String zone) {
+        if (this.evacuationZones == null) {
+            this.evacuationZones = new ArrayList<>();
+        }
+        this.evacuationZones.add(zone);
+    }
+
+    public List<String> getStatusEffects() {
+        return statusEffects;
+    }
+
+    public void setStatusEffects(List<String> statusEffects) {
+        this.statusEffects = statusEffects;
+    }
+
+    public void addStatusEffect(String effect) {
+        if (this.statusEffects == null) {
+            this.statusEffects = new ArrayList<>();
+        }
+        this.statusEffects.add(effect);
+    }
 }

@@ -1,5 +1,6 @@
 package Missions_data;
 
+import Missions_data.Enums.TechniqueType;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
@@ -9,7 +10,7 @@ public class Technique {
     @XmlElement
     private String name;
     @XmlElement
-    private String type;
+    private TechniqueType type;
     @XmlElement
     private String owner;
     @XmlElement
@@ -35,11 +36,11 @@ public class Technique {
     }
 
 
-    public void setType(String type){
+    public void setType(TechniqueType type){
         this.type = type;
     }
 
-    public String getType() {
+    public TechniqueType getType() {
         return type;
     }
 

@@ -1,6 +1,7 @@
 package Missions_data;
 
 
+import Missions_data.Enums.Rank;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
@@ -10,13 +11,13 @@ public class Sorcerer {
     @XmlElement
     private String name;
     @XmlElement
-    private String rank;
+    private Rank rank;
 
     public void setName(String name){
         this.name = name;
     }
 
-    public void setRank(String rank){
+    public void setRank(Rank rank){
         this.rank = rank;
     }
 
@@ -24,7 +25,7 @@ public class Sorcerer {
         return name;
     }
 
-    public String getRank() {
+    public Rank getRank() {
         return rank;
     }
 }

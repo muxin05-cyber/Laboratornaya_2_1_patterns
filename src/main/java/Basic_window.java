@@ -1,8 +1,12 @@
+import Missions_data.Mission;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Basic_window extends JFrame {
 
@@ -10,10 +14,11 @@ public class Basic_window extends JFrame {
     private JButton browse_button;
     private JButton parse_button;
     private JTextArea result_area;
-    //private Files_processing files_processing;
+    private GenericControl genericControl;
 
     public Basic_window() {
-        //files_processing = new Files_processing(this);
+
+        genericControl = new GenericControl(this);
         setTitle("Анализатор миссий");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(900, 700);
@@ -49,12 +54,14 @@ public class Basic_window extends JFrame {
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setCurrentDirectory(new File("."));
                 FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                        "Поддерживаемые файлы (*.xml, *.json, *.txt)",
-                        "xml", "json", "txt");
+                        "Поддерживаемые файлы (*.xml, *.json, *.txt, *.yaml)",
+                        "xml", "json", "txt", "yaml"
+                );
 
                 fileChooser.addChoosableFileFilter(filter);
                 fileChooser.setFileFilter(filter);
-                fileChooser.setAcceptAllFileFilterUsed(false);
+
+                fileChooser.setAcceptAllFileFilterUsed(true);
 
                 int result = fileChooser.showOpenDialog(Basic_window.this);
                 if (result == JFileChooser.APPROVE_OPTION) {
@@ -75,14 +82,26 @@ public class Basic_window extends JFrame {
         parse_button.setEnabled(false);
         parse_button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                result_area.setText("");
                 String filepath = path_field.getText();
-                // Mission mission = files_processing.define_type_of_file(filepath);
-                /*if (mission != null) {
-                    result_area.setText(mission.getView());
-                }*/
+                String view = genericControl.getView(filepath);
+                if (view != null) {
+                    result_area.setText(view);
+                }
             }
         });
 
+        String[] keysArray  = genericControl.getReportTypes();
+        JComboBox<String> reportSelector = new JComboBox<>(keysArray);
+        reportSelector.setSelectedItem("Brief");
+        reportSelector.addActionListener(e -> {
+            String selected = (String) reportSelector.getSelectedItem();
+            genericControl.setReportBuilder(selected);
+        });
+
+
+
+        button_panel.add(reportSelector);
         button_panel.add(parse_button);
         top_panel.add(path_panel, BorderLayout.CENTER);
         top_panel.add(button_panel, BorderLayout.SOUTH);
