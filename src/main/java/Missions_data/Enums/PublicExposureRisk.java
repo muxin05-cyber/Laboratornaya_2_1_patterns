@@ -1,6 +1,6 @@
 package Missions_data.Enums;
 
-import Parsers.Pair;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import jakarta.xml.bind.annotation.XmlEnumValue;

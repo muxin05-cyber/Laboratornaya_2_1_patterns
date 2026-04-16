@@ -7,13 +7,11 @@ public class MissionInfoDecorator extends ReportDecorator {
 
     private final Mission mission;
     String title;
-
     public MissionInfoDecorator(ReportComponent wrapped, Mission mission, String title) {
         super(wrapped);
         this.mission = mission;
         this.title = title;
     }
-
     @Override
     public String build() {
         StringBuilder sb = new StringBuilder();
@@ -35,8 +33,6 @@ public class MissionInfoDecorator extends ReportDecorator {
             sb.append("  Комментарий:     ").append(safe(mission.getComment())).append("\n");
             sb.append("\n");
         }
-
-
         sb.append(super.build());
         return sb.toString();
     }

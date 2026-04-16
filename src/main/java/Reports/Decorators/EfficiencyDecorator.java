@@ -16,7 +16,6 @@ public class EfficiencyDecorator extends ReportDecorator{
     @Override
     public String build() {
         StringBuilder sb = new StringBuilder();
-
         EconomicAssessment economicAssessment = mission.getEconomicAssessment();
         if (economicAssessment != null) {
             sb.append("Экономическая оценка: \n");
@@ -26,9 +25,8 @@ public class EfficiencyDecorator extends ReportDecorator{
             sb.append("  Коммерческий ущерб:      ").append(safe(Integer.toString(economicAssessment.getCommercialDamage()))).append("\n");
             sb.append("  Количество дней на восстановление:      ").append(safe(Integer.toString(economicAssessment.getRecoveryEstimateDays()))).append("\n");
             sb.append("  Покрытие страховкой:      ").append(safe(Boolean.toString(economicAssessment.isInsuranceCovered()))).append("\n");
+            sb.append("\n");
         }
-        sb.append("\n");
-
         sb.append(super.build());
         return sb.toString();
     }

@@ -16,9 +16,6 @@ public class CivilianImpactDecorator extends ReportDecorator {
     @Override
     public String build() {
         StringBuilder sb = new StringBuilder();
-
-
-
         CivilianImpact civilianImpact = mission.getCivilianImpact();
         if (civilianImpact != null) {
             sb.append("Урон гражданским: \n");
@@ -30,7 +27,6 @@ public class CivilianImpactDecorator extends ReportDecorator {
             }else{
                 sb.append("  Риск разоблачения: ").append("UNKNOWN").append("\n");
             }
-
         }
         sb.append("\n");
 

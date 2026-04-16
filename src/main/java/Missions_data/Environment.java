@@ -8,12 +8,16 @@ import jakarta.xml.bind.annotation.XmlElement;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Environment {
+
     @XmlElement
     private String weather;
+
     @XmlElement
     private String timeOfDay;
+
     @XmlElement
     private Visibility visibility;
+
     @XmlElement
     private double cursedEnergyDensity;
 
@@ -32,7 +36,6 @@ public class Environment {
     public void setVisibility(Visibility visibility){
         this.visibility = visibility;
     }
-
 
     public void setCursedEnergyDensity(double cursedEnergyDensity){
         this.cursedEnergyDensity = cursedEnergyDensity;

@@ -31,6 +31,7 @@ public class Technique {
     public void setDamage(int damage){
         this.damage = damage;
     }
+
     public void setOwner(String owner){
         this.owner = owner;
     }

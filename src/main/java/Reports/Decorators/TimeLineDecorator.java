@@ -18,7 +18,6 @@ public class TimeLineDecorator extends ReportDecorator {
     public String build() {
         StringBuilder sb = new StringBuilder();
         List<OperationEvent> timeline = mission.getOperationTimeline();
-
         if (timeline != null && !timeline.isEmpty()) {
             sb.append("Таймлайн происходивших событий:").append("\n");
             for (int i = 0; i < timeline.size(); i++) {
@@ -31,9 +30,8 @@ public class TimeLineDecorator extends ReportDecorator {
                     sb.append("\n");
                 }
             }
+            sb.append("\n");
         }
-        sb.append("\n");
-
         sb.append(super.build());
         return sb.toString();
     }

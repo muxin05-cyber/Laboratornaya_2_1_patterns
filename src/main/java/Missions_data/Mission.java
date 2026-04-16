@@ -9,27 +9,36 @@ import java.util.List;
 @XmlRootElement(name = "mission")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Mission {
+
     @XmlElement(name = "missionId")
     private String missionId;
 
     @XmlElement
     private String date;
+
     @XmlElement
     private String location;
+
     @XmlElement
     private Outcome outcome;
+
     @XmlElement(name = "damageCost")
     private int damageCost;
+
     @XmlElement(name = "curse")
     private Curse curse;
+
     @XmlElementWrapper(name = "sorcerers")
     @XmlElement(name = "sorcerer")
     private List<Sorcerer> sorcerers;
+
     @XmlElementWrapper(name = "techniques")
     @XmlElement(name = "technique")
     private List<Technique> techniques;
+
     @XmlElement(name = "enemyActivity")
     private EnemyActivity enemyActivity;
+
     @XmlElement(name = "environment")
     private Environment environment;
 

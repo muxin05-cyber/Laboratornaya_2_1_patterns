@@ -18,6 +18,7 @@ public interface MissionFactory {
     void addTechnique(Mission mission, String name, TechniqueType type, String owner, int damage);
     void addOperationEvent(Mission mission, OperationEvent event);
     void addOperationTag(Mission mission, String tag);
+
     void addSupportUnit(Mission mission, String unit);
     void addRecommendation(Mission mission, String recommendation);
     void addArtifact(Mission mission, String artifact);

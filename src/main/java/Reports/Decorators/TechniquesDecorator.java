@@ -17,9 +17,6 @@ public class TechniquesDecorator extends ReportDecorator {
     @Override
     public String build() {
         StringBuilder sb = new StringBuilder();
-
-
-
         if (mission.getTechniques() != null && !mission.getTechniques().isEmpty()) {
             sb.append("Применённые техники\n");
             for (int i = 0; i < mission.getTechniques().size(); i++) {
@@ -30,14 +27,12 @@ public class TechniquesDecorator extends ReportDecorator {
                 }else{
                     sb.append("      Тип:     ").append("UNKNOWN").append("\n");
                 }
-
                 sb.append("      Владелец: ").append(safe(t.getOwner())).append("\n");
                 sb.append("      Урон:    ").append(safeNumber(t.getDamage())).append("\n");
                 if (i < mission.getTechniques().size() - 1) sb.append("\n");
             }
+            sb.append("\n");
         }
-        sb.append("\n");
-
         sb.append(super.build());
         return sb.toString();
     }

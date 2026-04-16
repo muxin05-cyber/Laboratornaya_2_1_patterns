@@ -16,7 +16,6 @@ public class EnvironmentDecorator extends ReportDecorator{
     @Override
     public String build() {
         StringBuilder sb = new StringBuilder();
-
         Environment environment = mission.getEnvironment();
         if (environment != null) {
             sb.append("\nУсловия окружающей среды: \n");
@@ -27,13 +26,9 @@ public class EnvironmentDecorator extends ReportDecorator{
             }else{
                 sb.append("  Видимость: ").append("UNKNOWN").append("\n");
             }
-
             sb.append("  Плотность энергии проклятия: ").append(safe(Double.toString(environment.getCursedEnergyDensity()))).append("\n");
             sb.append("\n");
-
         }
-
-
         sb.append(super.build());
         return sb.toString();
     }

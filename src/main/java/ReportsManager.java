@@ -23,7 +23,7 @@ public class ReportsManager {
     public String setReportBuilderByName(String reportName) {
         String className = reportTypes.get(reportName);
         if (className == null) {
-            return "Неизвестный тип отчёта0: " + reportName;
+            return "Неизвестный тип отчёта: " + reportName;
         }
         this.currentReportType = reportName;
         return null;
@@ -40,41 +40,36 @@ public class ReportsManager {
 
         String className = reportTypes.get(currentReportType);
         if (className == null) {
-            return new Pair<>(null, "Неизвестный тип отчёта1: " + currentReportType);
+            return new Pair<>(null, "Неизвестный тип отчёта: " + currentReportType);
         }
-
-        ReportDirector director = createDirector(mission, className);
+        Pair<ReportDirector, String> pair = createDirector(mission, className);
+        ReportDirector director = pair.getFirst();
         if (director == null) {
-            return new Pair<>(null, "Ошибка создания директора");
+            return new Pair<>(null, pair.getSecond());
         }
 
         ReportComponent report = buildReportByType(director, currentReportType);
         if (report == null) {
-            return new Pair<>(null, "Неизвестный тип отчёта2: " + currentReportType);
+            return new Pair<>(null, "Неизвестный тип отчёта: " + currentReportType);
         }
-
         return new Pair<>(report.build(), "");
     }
 
-    private ReportDirector createDirector(Mission mission, String className) {
+    private Pair<ReportDirector, String> createDirector(Mission mission, String className) {
         try {
             Class<?> clazz = Class.forName(className);
             if (!ReportBuilder.class.isAssignableFrom(clazz)) {
-                System.err.println("Класс " + className + " не реализует интерфейс ReportBuilder");
-                return null;
+                return new Pair<>(null, "Класс " + className + " не реализует интерфейс ReportBuilder");
             }
             java.lang.reflect.Constructor<?> constructor = clazz.getConstructor(Mission.class);
             ReportBuilder builder = (ReportBuilder) constructor.newInstance(mission);
-            return new ReportDirector(builder);
+            return new Pair<>(new ReportDirector(builder), "");
         } catch (ClassNotFoundException e) {
-            System.err.println("Класс не найден: " + className);
-            return null;
+            return new Pair<>(null, "Класс не найден: " + className);
         } catch (NoSuchMethodException e) {
-            System.err.println("У класса " + className + " нет конструктора с параметром Mission");
-            return null;
+            return new Pair<>(null, "У класса " + className + " нет конструктора с параметром Mission");
         } catch (Exception e) {
-            System.err.println("Ошибка создания билдера: " + e.getMessage());
-            return null;
+            return new Pair<>(null, "Ошибка создания билдера: " + e.getMessage());
         }
     }
 

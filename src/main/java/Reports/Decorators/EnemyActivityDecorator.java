@@ -30,22 +30,18 @@ public class EnemyActivityDecorator extends ReportDecorator {
             }else{
                 sb.append("  Мобильность:     ").append("UNKNOWN").append("\n");
             }
-
             if(ea.getEscalationRisk()!= null){
                 sb.append("  Риск эскалации:  ").append(safe(ea.getEscalationRisk().getValue())).append("\n");
             }else{
                 sb.append("  Риск эскалации:  ").append("UNKNOWN").append("\n");
             }
-
             sb.append("\n");
-
             if(ea.getAttackPatterns() != null){
                 sb.append("Приёмы атак: \n");
                 int i = 0;
                 for(String s: ea.getAttackPatterns()){
                     i++;
                     sb.append(i).append(" - ").append(s).append("\n");
-
                 }
             }
 

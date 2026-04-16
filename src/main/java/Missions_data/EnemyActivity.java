@@ -30,25 +30,10 @@ public class EnemyActivity {
     @XmlElement(name = "measure")
     private List<String> countermeasuresUsed;
 
-    @XmlElement(name = "retreatStrategy")
-    private String retreatStrategy;
-
-    @XmlElement(name = "coordinationLevel")
-    private String coordinationLevel;
-
-    @XmlElementWrapper(name = "attackTypes")
-    @XmlElement(name = "type")
-    private List<String> attackTypes;
-
-    @XmlElementWrapper(name = "vulnerabilities")
-    @XmlElement(name = "vulnerability")
-    private List<String> vulnerabilities;
 
     public EnemyActivity() {
         this.attackPatterns = new ArrayList<>();
         this.countermeasuresUsed = new ArrayList<>();
-        this.attackTypes = new ArrayList<>();
-        this.vulnerabilities = new ArrayList<>();
     }
 
 
@@ -114,50 +99,5 @@ public class EnemyActivity {
         this.countermeasuresUsed.add(measure);
     }
 
-    public String getRetreatStrategy() {
-        return retreatStrategy;
-    }
-
-    public void setRetreatStrategy(String retreatStrategy) {
-        this.retreatStrategy = retreatStrategy;
-    }
-
-    public String getCoordinationLevel() {
-        return coordinationLevel;
-    }
-
-    public void setCoordinationLevel(String coordinationLevel) {
-        this.coordinationLevel = coordinationLevel;
-    }
-
-    public List<String> getAttackTypes() {
-        return attackTypes;
-    }
-
-    public void setAttackTypes(List<String> attackTypes) {
-        this.attackTypes = attackTypes != null ? attackTypes : new ArrayList<>();
-    }
-
-    public void addAttackType(String type) {
-        if (this.attackTypes == null) {
-            this.attackTypes = new ArrayList<>();
-        }
-        this.attackTypes.add(type);
-    }
-
-    public List<String> getVulnerabilities() {
-        return vulnerabilities;
-    }
-
-    public void setVulnerabilities(List<String> vulnerabilities) {
-        this.vulnerabilities = vulnerabilities != null ? vulnerabilities : new ArrayList<>();
-    }
-
-    public void addVulnerability(String vulnerability) {
-        if (this.vulnerabilities == null) {
-            this.vulnerabilities = new ArrayList<>();
-        }
-        this.vulnerabilities.add(vulnerability);
-    }
 
 }

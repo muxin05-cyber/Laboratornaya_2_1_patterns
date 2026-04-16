@@ -44,7 +44,6 @@ public class TXTParser implements CommonParser {
             if (firstLine == null) {
                 return new Pair<>(null, "Файл пуст");
             }
-
             if (firstLine.startsWith("[MISSION]")) {
                 return parseSectionFormat(filepath);
             } else if (firstLine.startsWith("missionId:")) {
@@ -68,7 +67,6 @@ public class TXTParser implements CommonParser {
 
     private Pair<Mission, String> parseFlatFormat(String filepath) {
         Mission mission = factory.createMission();
-
         Map<Integer, Sorcerer> sorcererMap = new TreeMap<>();
         Map<Integer, Technique> techniqueMap = new TreeMap<>();
         Map<Integer, OperationEvent> timelineMap = new TreeMap<>();
@@ -93,10 +91,8 @@ public class TXTParser implements CommonParser {
             while ((line = reader.readLine()) != null) {
                 line = line.trim();
                 if (line.isEmpty()) continue;
-
                 int colonIdx = line.indexOf(':');
                 if (colonIdx == -1) continue;
-
                 String tag = line.substring(0, colonIdx).trim();
                 String value = line.substring(colonIdx + 1).trim();
                 if (value.endsWith(",")) {
@@ -204,14 +200,12 @@ public class TXTParser implements CommonParser {
                 if (line.isEmpty()) continue;
 
                 if (line.startsWith("[") && line.endsWith("]")) {
-                    // Сохраняем текущие объекты
                     if (currentSorcerer != null) sorcerers.add(currentSorcerer);
                     if (currentTechnique != null) techniques.add(currentTechnique);
                     if (currentEvent != null) timeline.add(currentEvent);
                     if (currentStringList != null) {
                         saveStringList(mission, currentListType, currentStringList);
                     }
-
                     currentSection = line;
                     currentSorcerer = null;
                     currentTechnique = null;
@@ -231,12 +225,10 @@ public class TXTParser implements CommonParser {
                     }
                     continue;
                 }
-
                 String[] parts = line.split("=", 2);
                 if (parts.length != 2) continue;
                 String key = parts[0].trim();
                 String value = parts[1].trim();
-
                 if (currentSection.equals("") || currentSection.equals("[MISSION]")) {
                     parseBasicField(mission, key, value);
                 } else if (currentSection.equals("[CURSE]")) {
@@ -280,7 +272,6 @@ public class TXTParser implements CommonParser {
                     }
                 }
             }
-
             if (currentSorcerer != null) sorcerers.add(currentSorcerer);
             if (currentTechnique != null) techniques.add(currentTechnique);
             if (currentEvent != null) timeline.add(currentEvent);
@@ -296,11 +287,9 @@ public class TXTParser implements CommonParser {
         if (environment != null) mission.setEnvironment(environment);
         if (enemy != null) mission.setEnemyActivity(enemy);
         if (civilian != null) mission.setCivilianImpact(civilian);
-
         mission.setSorcerers(sorcerers);
         mission.setTechniques(techniques);
         mission.setOperationTimeline(timeline);
-
         return new Pair<>(mission, "");
     }
 
@@ -356,8 +345,6 @@ public class TXTParser implements CommonParser {
             case "targetPriority": e.setTargetPriority(value); return true;
             case "mobility": e.setMobility(Mobility.fromString(value)); return true;
             case "escalationRisk": e.setEscalationRisk(EscalationRisk.fromString(value)); return true;
-            case "retreatStrategy": e.setRetreatStrategy(value); return true;
-            case "coordinationLevel": e.setCoordinationLevel(value); return true;
             default: return false;
         }
     }

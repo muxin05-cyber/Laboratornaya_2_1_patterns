@@ -1,0 +1,466 @@
+classDiagram
+    direction TB
+
+%% Интерфейсы
+    class MissionFactory {
+        <<interface>>
+        +createMission() Mission
+        +createCurse(name, threatLevel) Curse
+        +createSorcerer(name, rank) Sorcerer
+        +createTechnique(name, type, owner, damage) Technique
+        +createEconomicAssessment() EconomicAssessment
+        +createCivilianImpact() CivilianImpact
+        +createEnvironment() Environment
+        +createEnemyActivity() EnemyActivity
+        +createOperationEvent(timestamp, type, description) OperationEvent
+        +addSorcerer(mission, name, rank) void
+        +addTechnique(mission, name, type, owner, damage) void
+        +addOperationEvent(mission, event) void
+        +addOperationTag(mission, tag) void
+        +addSupportUnit(mission, unit) void
+        +addRecommendation(mission, recommendation) void
+        +addArtifact(mission, artifact) void
+        +addEvacuationZone(mission, zone) void
+        +addStatusEffect(mission, effect) void
+        +addAttackPattern(enemy, pattern) void
+        +addCountermeasure(enemy, measure) void
+    }
+
+    class BaseMissionFactory {
+        -static instance: BaseMissionFactory
+        +createMission() Mission
+        +createCurse(name, threatLevel) Curse
+        +createSorcerer(name, rank) Sorcerer
+        +createTechnique(name, type, owner, damage) Technique
+        +createEconomicAssessment() EconomicAssessment
+        +createCivilianImpact() CivilianImpact
+        +createEnvironment() Environment
+        +createEnemyActivity() EnemyActivity
+        +createOperationEvent(timestamp, type, description) OperationEvent
+        +addSorcerer(mission, name, rank) void
+        +addTechnique(mission, name, type, owner, damage) void
+        +addOperationEvent(mission, event) void
+        +addOperationTag(mission, tag) void
+        +addSupportUnit(mission, unit) void
+        +addRecommendation(mission, recommendation) void
+        +addArtifact(mission, artifact) void
+        +addEvacuationZone(mission, zone) void
+        +addStatusEffect(mission, effect) void
+        +addAttackPattern(enemy, pattern) void
+        +addCountermeasure(enemy, measure) void
+    }
+
+%% Основные сущности данных
+    class Mission {
+        -missionId: String
+        -date: String
+        -location: String
+        -outcome: Outcome
+        -damageCost: int
+        -comment: String
+        -notes: String
+        -curse: Curse
+        -sorcerers: List~Sorcerer~
+        -techniques: List~Technique~
+        -enemyActivity: EnemyActivity
+        -environment: Environment
+        -economicAssessment: EconomicAssessment
+        -civilianImpact: CivilianImpact
+        -operationTimeline: List~OperationEvent~
+        -operationTags: List~String~
+        -supportUnits: List~String~
+        -recommendations: List~String~
+        -artifactsRecovered: List~String~
+        -evacuationZones: List~String~
+        -statusEffects: List~String~
+    }
+
+    class Curse {
+        -name: String
+        -threatLevel: ThreatLevel
+    }
+
+    class Sorcerer {
+        -name: String
+        -rank: Rank
+    }
+
+    class Technique {
+        -name: String
+        -type: TechniqueType
+        -owner: String
+        -damage: int
+    }
+
+    class EconomicAssessment {
+        -totalDamageCost: int
+        -infrastructureDamage: int
+        -transportDamage: int
+        -commercialDamage: int
+        -recoveryEstimateDays: int
+        -insuranceCovered: boolean
+    }
+
+    class CivilianImpact {
+        -evacuated: int
+        -injured: int
+        -missing: int
+        -publicExposureRisk: PublicExposureRisk
+    }
+
+    class Environment {
+        -weather: String
+        -timeOfDay: String
+        -visibility: Visibility
+        -cursedEnergyDensity: double
+    }
+
+    class EnemyActivity {
+        -behaviorType: String
+        -targetPriority: String
+        -mobility: Mobility
+        -escalationRisk: EscalationRisk
+        -attackPatterns: List~String~
+        -countermeasuresUsed: List~String~
+        -retreatStrategy: String
+        -coordinationLevel: String
+        -attackTypes: List~String~
+        -vulnerabilities: List~String~
+    }
+
+    class OperationEvent {
+        -timestamp: String
+        -type: String
+        -description: String
+    }
+
+%% Парсеры
+    class CommonParser {
+        <<interface>>
+        +supportType(filepath) boolean
+        +parse(filepath) Pair~Mission, String~
+    }
+
+    class XMLParser {
+        -context: JAXBContext
+        -unmarshaller: Unmarshaller
+        +supportType(filepath) boolean
+        +parse(filepath) Pair~Mission, String~
+    }
+
+    class JSONParser {
+        +supportType(filepath) boolean
+        +parse(filepath) Pair~Mission, String~
+    }
+
+    class TXTParser {
+        -factory: MissionFactory
+        +supportType(filepath) boolean
+        +parse(filepath) Pair~Mission, String~
+        -parseSectionFormat(filepath) Pair~Mission, String~
+        -parseFlatFormat(filepath) Pair~Mission, String~
+    }
+
+    class YAMLParser {
+        -factory: MissionFactory
+        +supportType(filepath) boolean
+        +parse(filepath) Pair~Mission, String~
+    }
+
+    class BinaryParser {
+        -factory: BaseMissionFactory
+        +supportType(filepath) boolean
+        +parse(filepath) Pair~Mission, String~
+    }
+
+%% Система отчетов (Строитель + Декоратор)
+    class ReportBuilder {
+        <<interface>>
+        +buildMissionInfo() void
+        +buildCurse() void
+        +buildSorcerers() void
+        +buildTechniques() void
+        +buildEnemyActivity() void
+        +buildEconomicAssessment() void
+        +buildCivilianImpact() void
+        +buildEnvironmentConditions() void
+        +buildTimeLine() void
+        +buildOperationTags() void
+        +buildSupportUnits() void
+        +buildRecommendations() void
+        +buildArtifactsRecovered() void
+        +buildEvacuationZones() void
+        +buildStatusEffects() void
+        +getResult() ReportComponent
+    }
+
+    class BaseReportBuilder {
+        <<abstract>>
+        #component: ReportComponent
+        #mission: Mission
+        +buildMissionInfo() void
+        +buildCurse() void
+        +buildSorcerers() void
+        +buildTechniques() void
+        +buildEnemyActivity() void
+        +buildEconomicAssessment() void
+        +buildCivilianImpact() void
+        +buildEnvironmentConditions() void
+        +buildTimeLine() void
+        +buildOperationTags() void
+        +buildSupportUnits() void
+        +buildRecommendations() void
+        +buildArtifactsRecovered() void
+        +buildEvacuationZones() void
+        +buildStatusEffects() void
+        +getResult() ReportComponent
+    }
+
+    class BriefReportBuilder {
+        +buildMissionInfo() void
+    }
+
+    class DetailedReportBuilder {
+        +buildMissionInfo() void
+    }
+
+    class RiskReportBuilder {
+        +buildMissionInfo() void
+    }
+
+    class StatisticsReportBuilder {
+        +buildMissionInfo() void
+    }
+
+    class ReportComponent {
+        <<interface>>
+        +build() String
+    }
+
+    class EmptyReport {
+        +build() String
+    }
+
+    class ReportDecorator {
+        <<abstract>>
+        #wrapped: ReportComponent
+        +build() String
+        #safe(value) String
+        #safeNumber(value) String
+    }
+
+    class MissionInfoDecorator {
+        -mission: Mission
+        -title: String
+        +build() String
+    }
+
+    class CurseDecorator {
+        -mission: Mission
+        +build() String
+    }
+
+    class SorcerersDecorator {
+        -mission: Mission
+        +build() String
+    }
+
+    class TechniquesDecorator {
+        -mission: Mission
+        +build() String
+    }
+
+    class EnemyActivityDecorator {
+        -mission: Mission
+        +build() String
+    }
+
+    class EfficiencyDecorator {
+        -mission: Mission
+        +build() String
+    }
+
+    class CivilianImpactDecorator {
+        -mission: Mission
+        +build() String
+    }
+
+    class EnvironmentDecorator {
+        -mission: Mission
+        +build() String
+    }
+
+    class TimeLineDecorator {
+        -mission: Mission
+        +build() String
+    }
+
+    class OperationTagsDecorator {
+        -mission: Mission
+        +build() String
+    }
+
+    class SupportUnitsDecorator {
+        -mission: Mission
+        +build() String
+    }
+
+    class RecommendationsDecorator {
+        -mission: Mission
+        +build() String
+    }
+
+    class ArtifactsRecoveredDecorator {
+        -mission: Mission
+        +build() String
+    }
+
+    class EvacuationZonesDecorator {
+        -mission: Mission
+        +build() String
+    }
+
+    class StatusEffectsDecorator {
+        -mission: Mission
+        +build() String
+    }
+
+    class ReportDirector {
+        -builder: ReportBuilder
+        +constructBriefReport() ReportComponent
+        +constructDetailedReport() ReportComponent
+        +constructRiskReport() ReportComponent
+        +constructStatisticsReport() ReportComponent
+    }
+
+%% Управление
+    class ReportsManager {
+        -currentReportType: String
+        -reportTypes: HashMap~String, String~
+        +setReportBuilderByName(reportName) String
+        +getReport(mission) Pair~String, String~
+        -createDirector(mission, className) ReportDirector
+        -buildReportByType(director, reportType) ReportComponent
+        +getReportTypes() String[]
+    }
+
+    class ParsersManagement {
+        -parsers: List~CommonParser~
+        +FileProcessing(filepath) Pair~Mission, String~
+    }
+
+    class GenericControl {
+        -window: Basic_window
+        -parsersManagement: ParsersManagement
+        -reportsManager: ReportsManager
+        +getView(filepath) String
+        +setReportBuilder(name) void
+        +getReportTypes() String[]
+    }
+
+%% Перечисления
+    class ThreatLevel {
+        <<enumeration>>
+        HIGH, MEDIUM, SPECIAL_GRADE, UNKNOWN, LOW
+    }
+
+    class Rank {
+        <<enumeration>>
+        GRADE_1, GRADE_2, GRADE_3, UNKNOWN
+    }
+
+    class TechniqueType {
+        <<enumeration>>
+        INNATE, BODY, UNKNOWN, WEAPON, BARRIER, SHIKIGAMI
+    }
+
+    class Outcome {
+        <<enumeration>>
+        SUCCESS, UNKNOWN, FAILURE, PARTIAL_SUCCESS
+    }
+
+    class Mobility {
+        <<enumeration>>
+        HIGH, UNKNOWN, MEDIUM, LOW
+    }
+
+    class EscalationRisk {
+        <<enumeration>>
+        HIGH, UNKNOWN, MEDIUM, LOW
+    }
+
+    class Visibility {
+        <<enumeration>>
+        HIGH, MEDIUM, UNKNOWN, LOW
+    }
+
+    class PublicExposureRisk {
+        <<enumeration>>
+        HIGH, MEDIUM, UNKNOWN, LOW
+    }
+
+%% Отношения
+    MissionFactory <|.. BaseMissionFactory
+    BaseMissionFactory ..> Mission : creates
+    BaseMissionFactory ..> Curse : creates
+    BaseMissionFactory ..> Sorcerer : creates
+    BaseMissionFactory ..> Technique : creates
+    BaseMissionFactory ..> EconomicAssessment : creates
+    BaseMissionFactory ..> CivilianImpact : creates
+    BaseMissionFactory ..> Environment : creates
+    BaseMissionFactory ..> EnemyActivity : creates
+    BaseMissionFactory ..> OperationEvent : creates
+
+    Mission *-- Curse
+    Mission *-- Sorcerer : contains
+    Mission *-- Technique : contains
+    Mission *-- EnemyActivity
+    Mission *-- Environment
+    Mission *-- EconomicAssessment
+    Mission *-- CivilianImpact
+    Mission *-- OperationEvent : contains
+
+    CommonParser <|.. XMLParser
+    CommonParser <|.. JSONParser
+    CommonParser <|.. TXTParser
+    CommonParser <|.. YAMLParser
+    CommonParser <|.. BinaryParser
+    TXTParser --> MissionFactory : uses
+    YAMLParser --> MissionFactory : uses
+    BinaryParser --> BaseMissionFactory : uses
+
+    ReportBuilder <|.. BaseReportBuilder
+    BaseReportBuilder <|-- BriefReportBuilder
+    BaseReportBuilder <|-- DetailedReportBuilder
+    BaseReportBuilder <|-- RiskReportBuilder
+    BaseReportBuilder <|-- StatisticsReportBuilder
+
+    ReportComponent <|.. EmptyReport
+    ReportComponent <|.. ReportDecorator
+    ReportDecorator <|-- MissionInfoDecorator
+    ReportDecorator <|-- CurseDecorator
+    ReportDecorator <|-- SorcerersDecorator
+    ReportDecorator <|-- TechniquesDecorator
+    ReportDecorator <|-- EnemyActivityDecorator
+    ReportDecorator <|-- EfficiencyDecorator
+    ReportDecorator <|-- CivilianImpactDecorator
+    ReportDecorator <|-- EnvironmentDecorator
+    ReportDecorator <|-- TimeLineDecorator
+    ReportDecorator <|-- OperationTagsDecorator
+    ReportDecorator <|-- SupportUnitsDecorator
+    ReportDecorator <|-- RecommendationsDecorator
+    ReportDecorator <|-- ArtifactsRecoveredDecorator
+    ReportDecorator <|-- EvacuationZonesDecorator
+    ReportDecorator <|-- StatusEffectsDecorator
+
+    BaseReportBuilder --> ReportComponent : builds
+    ReportDecorator --> ReportComponent : wraps
+    ReportDirector --> ReportBuilder : uses
+    ReportDirector --> ReportComponent : returns
+
+    ReportsManager --> ReportDirector : creates
+    ReportsManager --> Mission : uses
+    GenericControl --> ParsersManagement : uses
+    GenericControl --> ReportsManager : uses
+    ParsersManagement --> CommonParser : uses
+    ParsersManagement --> Mission : returns

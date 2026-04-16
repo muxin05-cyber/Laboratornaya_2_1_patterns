@@ -16,9 +16,7 @@ public class CurseDecorator extends ReportDecorator {
     @Override
     public String build() {
         StringBuilder sb = new StringBuilder();
-
         sb.append("Проклятие: \n");
-
         Curse curse = mission.getCurse();
         if (curse != null) {
             sb.append("  Название:      ").append(safe(curse.getName())).append("\n");
@@ -27,13 +25,10 @@ public class CurseDecorator extends ReportDecorator {
             }else{
                 sb.append("  Уровень угрозы: ").append(safe("UNKNOWN")).append("\n");
             }
-
-
         } else {
             sb.append("  Проклятие не указано\n");
         }
         sb.append("\n");
-
         sb.append(super.build());
         return sb.toString();
     }

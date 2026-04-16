@@ -153,6 +153,8 @@ public class BaseMissionFactory implements MissionFactory {
         mission.getStatusEffects().add(effect);
     }
 
+
+
     @Override
     public void addAttackPattern(EnemyActivity enemy, String pattern) {
         if (enemy.getAttackPatterns() == null) {

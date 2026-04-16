@@ -17,9 +17,6 @@ public class SorcerersDecorator extends ReportDecorator {
     @Override
     public String build() {
         StringBuilder sb = new StringBuilder();
-
-
-
         if (mission.getSorcerers() != null && !mission.getSorcerers().isEmpty()) {
             sb.append("Участники миссии:\n");
             for (int i = 0; i < mission.getSorcerers().size(); i++) {
@@ -32,9 +29,8 @@ public class SorcerersDecorator extends ReportDecorator {
                     sb.append(" — ").append("UNKNOWN").append("\n");
                 }
             }
+            sb.append("\n");
         }
-        sb.append("\n");
-
         sb.append(super.build());
         return sb.toString();
     }

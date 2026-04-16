@@ -18,7 +18,6 @@ public class YAMLParser implements CommonParser {
         this.factory = new BaseMissionFactory();
     }
 
-
     @Override
     public boolean supportType(String filepath) {
         return filepath != null && (filepath.endsWith(".yaml") || filepath.endsWith(".yml"));
@@ -33,145 +32,98 @@ public class YAMLParser implements CommonParser {
             if (data == null) {
                 return new Pair<>(null, "Файл пуст или имеет неверный формат");
             }
+
             Mission mission = factory.createMission();
-
-            parseBasicFields(mission, data);
-            parseCurse(mission, data);
-            parseSorcerers(mission, data);
-            parseTechniques(mission, data);
-            parseEnemyActivity(mission, data);
-            parseEconomicAssessment(mission, data);
-            parseCivilianImpact(mission, data);
-            parseEnvironment(mission, data);
-            parseOperationTimeline(mission, data);
-            parseStringLists(mission, data);
-
-            mission.setNotes(getString(data, "notes"));
-
+            parseAllFields(mission, data);
             return new Pair<>(mission, "");
 
         } catch (FileNotFoundException e) {
             return new Pair<>(null, "Файл не найден: " + filepath);
         } catch (Exception e) {
-            e.printStackTrace();
-            return new Pair<>(null, "Структура файла не соответствует шаблону файлов миссий типа yaml");
+            return new Pair<>(null, "Структура файла не соответствует шаблону YAML");
         }
     }
 
-    private void parseBasicFields(Mission mission, Map<String, Object> data) {
+    private void parseAllFields(Mission mission, Map<String, Object> data) {
         mission.setMissionId(getString(data, "missionId"));
         mission.setLocation(getString(data, "location"));
         mission.setComment(getString(data, "comment"));
-
+        mission.setNotes(getString(data, "notes"));
         Object dateObj = data.get("date");
         if (dateObj instanceof String) {
             mission.setDate((String) dateObj);
         } else if (dateObj instanceof Date) {
             mission.setDate(new SimpleDateFormat("yyyy-MM-dd").format((Date) dateObj));
         }
-
-        String outcomeStr = getString(data, "outcome");
-        if (outcomeStr != null) mission.setOutcome(Outcome.fromString(outcomeStr));
-
-        Object damageObj = data.get("damageCost");
-        if (damageObj instanceof Number) {
-            mission.setDamageCost(((Number) damageObj).intValue());
-        }
+        mission.setOutcome(Outcome.fromString(getString(data, "outcome")));
+        mission.setDamageCost(getInt(data, "damageCost"));
+        parseCurse(mission, data);
+        parseSorcerers(mission, data);
+        parseTechniques(mission, data);
+        parseEnemyActivity(mission, data);
+        parseEconomicAssessment(mission, data);
+        parseCivilianImpact(mission, data);
+        parseEnvironment(mission, data);
+        parseOperationTimeline(mission, data);
+        parseStringList(data, "operationTags", mission::addOperationTag);
+        parseStringList(data, "supportUnits", mission::addSupportUnit);
+        parseStringList(data, "recommendations", mission::addRecommendation);
+        parseStringList(data, "artifactsRecovered", mission::addArtifact);
+        parseStringList(data, "evacuationZones", mission::addEvacuationZone);
+        parseStringList(data, "statusEffects", mission::addStatusEffect);
     }
 
     private void parseCurse(Mission mission, Map<String, Object> data) {
-        Object obj = data.get("curse");
-        if (!(obj instanceof Map)) return;
+        Map<String, Object> map = getMap(data, "curse");
+        if (map == null) return;
 
-        Map<String, Object> map = (Map<String, Object>) obj;
-        String name = getString(map, "name");
-        String threatStr = getString(map, "threatLevel");
-
-        Curse curse = factory.createCurse(name, ThreatLevel.fromString(threatStr));
+        Curse curse = factory.createCurse(
+                getString(map, "name"),
+                ThreatLevel.fromString(getString(map, "threatLevel"))
+        );
         mission.setCurse(curse);
     }
 
     private void parseSorcerers(Mission mission, Map<String, Object> data) {
-        Object obj = data.get("sorcerers");
-        if (!(obj instanceof List)) return;
-
-        for (Object item : (List<?>) obj) {
-            if (!(item instanceof Map)) continue;
-            Map<String, Object> map = (Map<String, Object>) item;
-
-            String name = getString(map, "name");
-            String rankStr = getString(map, "rank");
-
-            factory.addSorcerer(mission, name, Rank.fromString(rankStr));
+        List<Map<String, Object>> list = getListOfMaps(data, "sorcerers");
+        for (Map<String, Object> map : list) {
+            factory.addSorcerer(mission,
+                    getString(map, "name"),
+                    Rank.fromString(getString(map, "rank"))
+            );
         }
     }
 
     private void parseTechniques(Mission mission, Map<String, Object> data) {
-        Object obj = data.get("techniques");
-        if (!(obj instanceof List)) return;
-
-        for (Object item : (List<?>) obj) {
-            if (!(item instanceof Map)) continue;
-            Map<String, Object> map = (Map<String, Object>) item;
-
-            String name = getString(map, "name");
-            String typeStr = getString(map, "type");
-            String owner = getString(map, "owner");
-            int damage = 0;
-
-            Object dmg = map.get("damage");
-            if (dmg instanceof Number) damage = ((Number) dmg).intValue();
-
-            factory.addTechnique(mission, name, TechniqueType.fromString(typeStr), owner, damage);
+        List<Map<String, Object>> list = getListOfMaps(data, "techniques");
+        for (Map<String, Object> map : list) {
+            factory.addTechnique(mission,
+                    getString(map, "name"),
+                    TechniqueType.fromString(getString(map, "type")),
+                    getString(map, "owner"),
+                    getInt(map, "damage")
+            );
         }
     }
 
     private void parseEnemyActivity(Mission mission, Map<String, Object> data) {
-        Object obj = data.get("enemyActivity");
-        if (!(obj instanceof Map)) return;
-
-        Map<String, Object> map = (Map<String, Object>) obj;
+        Map<String, Object> map = getMap(data, "enemyActivity");
+        if (map == null) return;
         EnemyActivity enemy = factory.createEnemyActivity();
-
         enemy.setBehaviorType(getString(map, "behaviorType"));
         enemy.setTargetPriority(getString(map, "targetPriority"));
-        enemy.setRetreatStrategy(getString(map, "retreatStrategy"));
-        enemy.setCoordinationLevel(getString(map, "coordinationLevel"));
-
-        String mobStr = getString(map, "mobility");
-        if (mobStr != null) enemy.setMobility(Mobility.fromString(mobStr));
-
-        String riskStr = getString(map, "escalationRisk");
-        if (riskStr != null) enemy.setEscalationRisk(EscalationRisk.fromString(riskStr));
-
-        // Добавляем паттерны атак
-        Object patternsObj = map.get("attackPatterns");
-        if (patternsObj instanceof List) {
-            for (Object p : (List<?>) patternsObj) {
-                if (p != null) factory.addAttackPattern(enemy, p.toString());
-            }
-        }
-
-        Object measuresObj = map.get("countermeasuresUsed");
-        if (measuresObj instanceof List) {
-            for (Object m : (List<?>) measuresObj) {
-                if (m != null) factory.addCountermeasure(enemy, m.toString());
-            }
-        }
-
-        enemy.setAttackTypes(getStringList(map, "attackTypes"));
-        enemy.setVulnerabilities(getStringList(map, "vulnerabilities"));
-
+        enemy.setMobility(Mobility.fromString(getString(map, "mobility")));
+        enemy.setEscalationRisk(EscalationRisk.fromString(getString(map, "escalationRisk")));
+        parseStringList(map, "attackPatterns", enemy::addAttackPattern);
+        parseStringList(map, "countermeasuresUsed", enemy::addCountermeasure);
         mission.setEnemyActivity(enemy);
     }
 
     private void parseEconomicAssessment(Mission mission, Map<String, Object> data) {
-        Object obj = data.get("economicAssessment");
-        if (!(obj instanceof Map)) return;
+        Map<String, Object> map = getMap(data, "economicAssessment");
+        if (map == null) return;
 
-        Map<String, Object> map = (Map<String, Object>) obj;
         EconomicAssessment ea = factory.createEconomicAssessment();
-
         ea.setTotalDamageCost(getInt(map, "totalDamageCost"));
         ea.setInfrastructureDamage(getInt(map, "infrastructureDamage"));
         ea.setTransportDamage(getInt(map, "transportDamage"));
@@ -183,82 +135,69 @@ public class YAMLParser implements CommonParser {
     }
 
     private void parseCivilianImpact(Mission mission, Map<String, Object> data) {
-        Object obj = data.get("civilianImpact");
-        if (!(obj instanceof Map)) return;
+        Map<String, Object> map = getMap(data, "civilianImpact");
+        if (map == null) return;
 
-        Map<String, Object> map = (Map<String, Object>) obj;
         CivilianImpact ci = factory.createCivilianImpact();
-
         ci.setEvacuated(getInt(map, "evacuated"));
         ci.setInjured(getInt(map, "injured"));
         ci.setMissing(getInt(map, "missing"));
-
-        String riskStr = getString(map, "publicExposureRisk");
-        if (riskStr != null) ci.setPublicExposureRisk(PublicExposureRisk.fromString(riskStr));
+        ci.setPublicExposureRisk(PublicExposureRisk.fromString(getString(map, "publicExposureRisk")));
 
         mission.setCivilianImpact(ci);
     }
 
     private void parseEnvironment(Mission mission, Map<String, Object> data) {
-        Object obj = data.get("environment");
-        if (!(obj instanceof Map)) return;
-
-        Map<String, Object> map = (Map<String, Object>) obj;
+        Map<String, Object> map = getMap(data, "environment");
+        if (map == null) return;
         Environment env = factory.createEnvironment();
-
         env.setWeather(getString(map, "weather"));
         env.setTimeOfDay(getString(map, "timeOfDay"));
-
-        String visStr = getString(map, "visibility");
-        if (visStr != null) env.setVisibility(Visibility.fromString(visStr));
-
-        Object densityObj = map.get("cursedEnergyDensity");
-        if (densityObj instanceof Number) {
-            env.setCursedEnergyDensity(((Number) densityObj).doubleValue());
-        } else if (densityObj instanceof String) {
-            try {
-                env.setCursedEnergyDensity(Double.parseDouble((String) densityObj));
-            } catch (NumberFormatException ignored) {}
-        }
+        env.setVisibility(Visibility.fromString(getString(map, "visibility")));
+        env.setCursedEnergyDensity(getDouble(map, "cursedEnergyDensity"));
 
         mission.setEnvironment(env);
     }
 
     private void parseOperationTimeline(Mission mission, Map<String, Object> data) {
-        Object obj = data.get("operationTimeline");
-        if (!(obj instanceof List)) return;
-
-        for (Object item : (List<?>) obj) {
-            if (!(item instanceof Map)) continue;
-            Map<String, Object> map = (Map<String, Object>) item;
-
-            String timestamp = getString(map, "timestamp");
-            String type = getString(map, "type");
-            String description = getString(map, "description");
-
-            OperationEvent event = factory.createOperationEvent(timestamp, type, description);
-            factory.addOperationEvent(mission, event);
+        List<Map<String, Object>> list = getListOfMaps(data, "operationTimeline");
+        for (Map<String, Object> map : list) {
+            factory.addOperationEvent(mission,
+                    factory.createOperationEvent(
+                            getString(map, "timestamp"),
+                            getString(map, "type"),
+                            getString(map, "description")
+                    )
+            );
         }
     }
 
-    private void parseStringLists(Mission mission, Map<String, Object> data) {
-        for (String tag : getStringList(data, "operationTags")) {
-            factory.addOperationTag(mission, tag);
+    @SuppressWarnings("unchecked")
+    private Map<String, Object> getMap(Map<String, Object> data, String key) {
+        Object obj = data.get(key);
+        return (obj instanceof Map) ? (Map<String, Object>) obj : null;
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<Map<String, Object>> getListOfMaps(Map<String, Object> data, String key) {
+        Object obj = data.get(key);
+        if (!(obj instanceof List)) return Collections.emptyList();
+
+        List<Map<String, Object>> result = new ArrayList<>();
+        for (Object item : (List<?>) obj) {
+            if (item instanceof Map) {
+                result.add((Map<String, Object>) item);
+            }
         }
-        for (String unit : getStringList(data, "supportUnits")) {
-            factory.addSupportUnit(mission, unit);
-        }
-        for (String rec : getStringList(data, "recommendations")) {
-            factory.addRecommendation(mission, rec);
-        }
-        for (String artifact : getStringList(data, "artifactsRecovered")) {
-            factory.addArtifact(mission, artifact);
-        }
-        for (String zone : getStringList(data, "evacuationZones")) {
-            factory.addEvacuationZone(mission, zone);
-        }
-        for (String effect : getStringList(data, "statusEffects")) {
-            factory.addStatusEffect(mission, effect);
+        return result;
+    }
+
+    private void parseStringList(Map<String, Object> data, String key, java.util.function.Consumer<String> adder) {
+        Object obj = data.get(key);
+        if (obj instanceof List) {
+            for (Object item : (List<?>) obj) {
+                if (item != null) adder.accept(item.toString());
+            }
         }
     }
 
@@ -282,19 +221,19 @@ public class YAMLParser implements CommonParser {
         return 0;
     }
 
+    private double getDouble(Map<String, Object> map, String key) {
+        Object val = map.get(key);
+        if (val instanceof Number) return ((Number) val).doubleValue();
+        if (val instanceof String) {
+            try {
+                return Double.parseDouble((String) val);
+            } catch (NumberFormatException ignored) {}
+        }
+        return 0.0;
+    }
+
     private boolean getBoolean(Map<String, Object> map, String key) {
         Object val = map.get(key);
         return val instanceof Boolean && (Boolean) val;
-    }
-
-    private List<String> getStringList(Map<String, Object> map, String key) {
-        List<String> result = new ArrayList<>();
-        Object obj = map.get(key);
-        if (obj instanceof List) {
-            for (Object item : (List<?>) obj) {
-                if (item != null) result.add(item.toString());
-            }
-        }
-        return result;
     }
 }
