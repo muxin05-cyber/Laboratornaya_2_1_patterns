@@ -4,12 +4,7 @@ import Missions_data.Enums.*;
 import java.util.ArrayList;
 
 public class BaseMissionFactory implements MissionFactory {
-
-    private static BaseMissionFactory instance;
-
     public BaseMissionFactory() {}
-
-
     @Override
     public Mission createMission() {
         Mission mission = new Mission();

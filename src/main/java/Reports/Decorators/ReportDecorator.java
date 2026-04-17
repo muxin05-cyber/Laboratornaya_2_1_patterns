@@ -17,10 +17,18 @@ public abstract class ReportDecorator implements ReportComponent {
     }
 
     protected String safe(String value) {
-        return value != null && !value.isEmpty() ? value : "не указано";
+        if (value != null && !value.isEmpty()) {
+            return value;
+        } else {
+            return "не указано";
+        }
     }
 
     protected String safeNumber(int value) {
-        return value > 0 ? String.valueOf(value) : "не указан";
+        if (value > 0) {
+            return String.valueOf(value);
+        } else {
+            return "не указан";
+        }
     }
 }
