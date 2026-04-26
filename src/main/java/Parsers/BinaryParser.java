@@ -10,7 +10,7 @@ import java.util.*;
 
 public class BinaryParser implements CommonParser {
 
-    private final BaseMissionFactory factory = new BaseMissionFactory();
+    private final MissionFactory factory = new BaseMissionFactory();
 
     @Override
     public boolean supportType(String filepath) {

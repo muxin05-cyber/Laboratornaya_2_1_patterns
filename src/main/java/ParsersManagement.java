@@ -29,7 +29,6 @@ public class ParsersManagement {
                 Pair<Mission, String> result = parser.parse(filepath);
                 Mission mission = result.getFirst();
                 String error = result.getSecond();
-
                 if (mission != null) {
                     return new Pair<>(mission, null);
                 } else {
