@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Архив миссий — Токийский магический колледж</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .btn-danger {
+    background: var(--error);
+    color: white;
+    padding: 6px 12px;
+    font-size: 16px;
+}
+
+.btn-danger:hover {
+    background: #dc2626;
+}
+        :root {
+            --bg-primary: #f8f9fc;
+            --bg-card: #ffffff;
+            --bg-input: #f1f3f8;
+            --text-primary: #1a1d2e;
+            --text-secondary: #5a5f7a;
+            --text-muted: #8b8fa3;
+            --accent: #4f46e5;
+            --accent-hover: #4338ca;
+            --accent-light: #eef2ff;
+            --border: #e2e6f0;
+            --border-focus: #4f46e5;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.05), 0 2px 4px rgba(0,0,0,0.04);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.08), 0 4px 10px rgba(0,0,0,0.04);
+            --radius: 12px;
+            --radius-sm: 8px;
+            --transition: 0.2s ease;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            padding: 0 32px;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .header-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--accent-light);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.3px;
+        }
+
+        .header-subtitle {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 400;
+            letter-spacing: 0.3px;
+        }
+
+        .header-badge {
+            background: var(--accent-light);
+            color: var(--accent);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .page-description {
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+            font-size: 15px;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-1px);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .stat-value.accent { color: var(--accent); }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .main-grid.full {
+            grid-template-columns: 1fr;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--accent-light);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-family: inherit;
+            color: var(--text-primary);
+            background: var(--bg-input);
+            transition: var(--transition);
+            outline: none;
+        }
+
+        .form-input:focus, .form-select:focus {
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+            background: var(--bg-card);
+        }
+
+        .form-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .file-upload-wrapper {
+            position: relative;
+        }
+
+        .file-upload-input {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-upload-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px;
+            border: 2px dashed var(--border);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-secondary);
+            font-size: 14px;
+            background: var(--bg-input);
+        }
+
+        .file-upload-label:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: var(--accent-light);
+        }
+
+        .file-name {
+            font-size: 12px;
+            color: var(--success);
+            margin-top: 6px;
+            font-weight: 500;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--bg-input);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead th {
+            text-align: left;
+            padding: 12px 16px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--border);
+            background: var(--bg-input);
+        }
+
+        thead th:first-child {
+            border-radius: var(--radius-sm) 0 0 0;
+        }
+
+        thead th:last-child {
+            border-radius: 0 var(--radius-sm) 0 0;
+        }
+
+        tbody td {
+            padding: 12px 16px;
+            font-size: 14px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-primary);
+        }
+
+        tbody tr {
+            transition: var(--transition);
+        }
+
+        tbody tr:hover {
+            background: var(--accent-light);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        .badge-success { background: #d1fae5; color: #065f46; }
+        .badge-error { background: #fee2e2; color: #991b1b; }
+        .badge-warning { background: #fef3c7; color: #92400e; }
+
+        .result-area {
+            background: #fafbfd;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 20px;
+            min-height: 250px;
+            max-height: 500px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+            font-size: 13px;
+            line-height: 1.7;
+            color: var(--text-primary);
+            margin-top: 16px;
+        }
+
+        .result-area:empty::after {
+            content: 'Здесь появится результат...';
+            color: var(--text-muted);
+            font-family: 'Inter', sans-serif;
+            font-style: italic;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .status-msg {
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 500;
+            margin-top: 12px;
+            display: none;
+        }
+
+        .status-msg.show { display: block; }
+        .status-msg.success { background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
+        .status-msg.error { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+
+        @media (max-width: 900px) {
+            .stats-row { grid-template-columns: 1fr; }
+            .main-grid { grid-template-columns: 1fr; }
+            .header { padding: 0 16px; }
+            .container { padding: 20px 16px; }
+        }
+
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div class="header-brand">
+        <div class="header-icon">🔮</div>
+        <div>
+            <div class="header-title">Архив миссий</div>
+            <div class="header-subtitle">Токийский магический колледж</div>
+        </div>
+    </div>
+    <span class="header-badge">Версия 3.0</span>
+</header>
+
+<main class="container">
+    <h1 class="page-title">Управление миссиями</h1>
+    <p class="page-description">Загрузка, хранение и анализ отчётов о магических операциях</p>
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="stat-label">Всего миссий</div>
+            <div class="stat-value accent" id="totalMissions">—</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Поддерживаемые форматы</div>
+            <div class="stat-value" style="font-size: 14px; line-height: 1.8;">
+                <span style="display: inline-block; margin: 2px 6px; padding: 4px 10px; background: #eef2ff; border-radius: 6px; font-size: 13px; font-weight: 500;">XML</span>
+                <span style="display: inline-block; margin: 2px 6px; padding: 4px 10px; background: #fef3c7; border-radius: 6px; font-size: 13px; font-weight: 500;">JSON</span>
+                <span style="display: inline-block; margin: 2px 6px; padding: 4px 10px; background: #d1fae5; border-radius: 6px; font-size: 13px; font-weight: 500;">TXT</span>
+                <span style="display: inline-block; margin: 2px 6px; padding: 4px 10px; background: #fce7f3; border-radius: 6px; font-size: 13px; font-weight: 500;">YAML</span>
+                <span style="display: inline-block; margin: 2px 6px; padding: 4px 10px; background: #e0e7ff; border-radius: 6px; font-size: 13px; font-weight: 500;">BIN</span>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Типы отчётов</div>
+            <div class="stat-value" style="font-size: 14px; line-height: 1.8;">
+                <span style="display: inline-block; margin: 2px 6px; padding: 4px 10px; background: #eef2ff; border-radius: 6px; font-size: 13px; font-weight: 500;">Краткий</span>
+                <span style="display: inline-block; margin: 2px 6px; padding: 4px 10px; background: #fef3c7; border-radius: 6px; font-size: 13px; font-weight: 500;">Детальный</span>
+                <span style="display: inline-block; margin: 2px 6px; padding: 4px 10px; background: #fee2e2; border-radius: 6px; font-size: 13px; font-weight: 500;">Риски</span>
+                <span style="display: inline-block; margin: 2px 6px; padding: 4px 10px; background: #d1fae5; border-radius: 6px; font-size: 13px; font-weight: 500;">Статистика</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-grid">
+        <div class="card">
+            <div class="card-header">
+                    <span class="card-title">
+                        <span class="card-icon">📁</span>
+                        Импорт из файла
+                    </span>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Выберите файл миссии</label>
+                <div class="file-upload-wrapper">
+                    <input type="file" class="file-upload-input" id="fileInput" accept=".xml,.json,.txt,.yaml,.yml" onchange="updateFileName()">
+                    <label for="fileInput" class="file-upload-label">
+                        <span>📎</span> Нажмите для выбора или перетащите файл
+                    </label>
+                </div>
+                <div class="file-name" id="fileNameDisplay"></div>
+            </div>
+            <button class="btn btn-primary" onclick="importMission()">
+                ⬆ Загрузить в архив
+            </button>
+            <div class="status-msg" id="importStatus"></div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                    <span class="card-title">
+                        <span class="card-icon">📊</span>
+                        Генерация отчёта
+                    </span>
+            </div>
+            <div class="form-group">
+                <label class="form-label">ID миссии</label>
+                <input type="text" class="form-input" id="missionIdInput" placeholder="Например: M001">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Тип отчёта</label>
+                <select class="form-select" id="reportType">
+                    <option value="Brief">📋 Краткий отчёт</option>
+                    <option value="Detailed">📑 Детальный отчёт</option>
+                    <option value="Risk">⚠ Отчёт по рискам</option>
+                    <option value="Statistics">📈 Статистический отчёт</option>
+                </select>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="generateReport()">🔍 Сформировать</button>
+                <button class="btn btn-secondary" onclick="downloadReport()">📥 Скачать файлом</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+                <span class="card-title">
+                    <span class="card-icon">📝</span>
+                    Результат
+                </span>
+            <button class="btn btn-secondary" onclick="clearResult()">🗑 Очистить</button>
+        </div>
+        <div class="result-area" id="result"></div>
+    </div>
+
+    <div class="card" style="margin-bottom: 24px;">
+        <div class="card-header">
+                <span class="card-title">
+                    <span class="card-icon">🗄</span>
+                    Архив миссий
+                </span>
+            <button class="btn btn-secondary" onclick="loadArchive()">🔄 Обновить</button>
+        </div>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                <tr>
+                    <th>ID миссии</th>
+                    <th>Дата</th>
+                    <th>Локация</th>
+                    <th>Результат</th>
+                    <th>Проклятие</th>
+                    <th>Изменено</th>
+                </tr>
+                </thead>
+                <tbody id="archiveTableBody">
+                <tr>
+                    <td colspan="7">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📭</div>
+                            <p>Нажмите «Обновить», чтобы загрузить список миссий</p>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+</main>
+
+<script>
+    async function loadStats() {
+    try {
+        const resp = await fetch('/api/missions/stats');
+        const data = await resp.json();
+        document.getElementById('totalMissions').textContent = data.totalMissions;
+    } catch(e) {
+        document.getElementById('totalMissions').textContent = '—';
+    }
+}
+
+    function updateFileName() {
+        const fileInput = document.getElementById('fileInput');
+        const display = document.getElementById('fileNameDisplay');
+        if (fileInput.files.length > 0) {
+            display.textContent = '✓ ' + fileInput.files[0].name;
+        } else {
+            display.textContent = '';
+        }
+    }
+
+    async function importMission() {
+    const fileInput = document.getElementById('fileInput');
+    const statusEl = document.getElementById('importStatus');
+
+    if (!fileInput.files[0]) {
+        showStatus(statusEl, 'Выберите файл', 'error');
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', fileInput.files[0]);
+
+    try {
+        const resp = await fetch('/api/missions/import', { method: 'POST', body: formData });
+        const data = await resp.json();
+
+        if (data.status === 'ok') {
+            showStatus(statusEl, '✅ Миссия «' + data.mission.missionId + '» загружена', 'success');
+            document.getElementById('missionIdInput').value = data.mission.missionId || '';
+        } else if (data.status === 'warning') {
+            let msg = '⚠ Сохранено с замечаниями:\n' + data.warnings.join('\n');
+            showStatus(statusEl, msg, 'warning');
+            document.getElementById('missionIdInput').value = data.mission.missionId || '';
+        } else {
+            showStatus(statusEl, '❌ ' + data.message, 'error');
+        }
+
+        fileInput.value = '';
+        document.getElementById('fileNameDisplay').textContent = '';
+        loadStats();
+        loadArchive();
+    } catch(e) {
+        showStatus(statusEl, '❌ Ошибка сети', 'error');
+    }
+}
+   async function loadArchive() {
+    const tbody = document.getElementById('archiveTableBody');
+    tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="empty-state-icon">⏳</div><p>Загрузка...</p></div></td></tr>';
+
+    try {
+        const resp = await fetch('/api/missions');
+        const missions = await resp.json();
+
+        if (!missions.length) {
+            tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="empty-state-icon">📭</div><p>Архив пуст</p></div></td></tr>';
+            return;
+        }
+
+        let html = '';
+        missions.forEach(m => {
+            const outcomeBadge = getOutcomeBadge(m.outcome);
+            html += `
+                <tr>
+                    <td onclick="document.getElementById('missionIdInput').value='${m.missionId || ''}'" style="cursor:pointer">
+                        <strong>${m.missionId || '—'}</strong>
+                    </td>
+                    <td onclick="document.getElementById('missionIdInput').value='${m.missionId || ''}'" style="cursor:pointer">
+                        ${m.date || '—'}
+                    </td>
+                    <td onclick="document.getElementById('missionIdInput').value='${m.missionId || ''}'" style="cursor:pointer">
+                        ${m.location || '—'}
+                    </td>
+                    <td onclick="document.getElementById('missionIdInput').value='${m.missionId || ''}'" style="cursor:pointer">
+                        ${outcomeBadge}
+                    </td>
+                    <td onclick="document.getElementById('missionIdInput').value='${m.missionId || ''}'" style="cursor:pointer">
+                        ${m.curseName || '—'}
+                    </td>
+                    <td style="font-size:12px;color:var(--text-muted)">${formatDate(m.updatedAt)}</td>
+                    <td>
+                        <button class="btn btn-danger" onclick="deleteMission('${m.missionId}')" title="Удалить миссию">
+                            🗑
+                        </button>
+                    </td>
+                </tr>`;
+        });
+        tbody.innerHTML = html;
+        loadStats();
+    } catch(e) {
+        tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><span class="error">Ошибка загрузки</span></div></td></tr>';
+    }
+}
+
+    function getOutcomeBadge(outcome) {
+        if (!outcome) return '<span class="badge">—</span>';
+        switch(outcome.toUpperCase()) {
+            case 'SUCCESS': return '<span class="badge badge-success">Успех</span>';
+            case 'FAILURE': return '<span class="badge badge-error">Провал</span>';
+            case 'PARTIAL_SUCCESS': return '<span class="badge badge-warning">Частично</span>';
+            default: return `<span class="badge">${outcome}</span>`;
+        }
+    }
+
+    async function generateReport() {
+        const missionId = document.getElementById('missionIdInput').value.trim();
+        const reportType = document.getElementById('reportType').value;
+        const resultDiv = document.getElementById('result');
+
+        if (!missionId) {
+            resultDiv.textContent = '⚠ Укажите ID миссии';
+            return;
+        }
+
+        resultDiv.textContent = '⌛ Генерация отчёта...';
+
+        try {
+            const resp = await fetch(`/api/missions/${missionId}/report?reportType=${reportType}`);
+            const text = await resp.text();
+            resultDiv.textContent = resp.ok ? text : `❌ ${text}`;
+        } catch(e) {
+            resultDiv.textContent = '❌ Ошибка: ' + e.message;
+        }
+    }
+
+    function downloadReport() {
+        const missionId = document.getElementById('missionIdInput').value.trim();
+        const reportType = document.getElementById('reportType').value;
+        if (!missionId) { alert('Укажите ID миссии'); return; }
+        window.open(`/api/missions/${missionId}/report/download?reportType=${reportType}`);
+    }
+
+    function clearResult() {
+        document.getElementById('result').textContent = '';
+    }
+
+    function showStatus(el, msg, type) {
+        el.textContent = msg;
+        el.className = `status-msg show ${type}`;
+    }
+
+    function hideStatus(el) {
+        el.className = 'status-msg';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadStats();
+        loadArchive();
+    });
+
+async function deleteMission(missionId) {
+    if (!confirm('Удалить миссию ' + missionId + '?')) return;
+    try {
+        const resp = await fetch('/api/missions/' + missionId, { method: 'DELETE' });
+        if (resp.ok) {
+            await loadArchive();
+            loadStats();
+        }
+    } catch(e) {
+        alert('Ошибка сети');
+    }
+}
+
+    function formatDate(dateStr) {
+    if (!dateStr) return '—';
+    const d = new Date(dateStr);
+    return d.toLocaleString('ru-RU', {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit'
+    });
+}
+
+</script>
+</body>
+</html>

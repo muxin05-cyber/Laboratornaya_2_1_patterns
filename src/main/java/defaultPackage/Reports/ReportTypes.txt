@@ -1,0 +1,4 @@
+Detailed=defaultPackage.Reports.Builders.DetailedReportBuilder
+Brief=defaultPackage.Reports.Builders.BriefReportBuilder
+Risk=defaultPackage.Reports.Builders.RiskReportBuilder
+Statistics=defaultPackage.Reports.Builders.StatisticsReportBuilder
