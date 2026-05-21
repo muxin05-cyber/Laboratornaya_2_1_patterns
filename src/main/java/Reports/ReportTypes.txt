@@ -1,4 +1,0 @@
-Detailed=Reports.Builders.DetailedReportBuilder
-Brief=Reports.Builders.BriefReportBuilder
-Risk=Reports.Builders.RiskReportBuilder
-Statistics=Reports.Builders.StatisticsReportBuilder
