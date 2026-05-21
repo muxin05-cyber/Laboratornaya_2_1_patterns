@@ -5,6 +5,7 @@ import defaultPackage.Management.ReportsManager;
 import defaultPackage.Missions_data.*;
 import defaultPackage.repository.MissionRepository;
 import defaultPackage.Parsers.Pair;
+import defaultPackage.validator.MissionValidator;
 import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,26 +22,19 @@ public class MissionService {
     private final MissionRepository missionRepository;
     private final ParsersManagement parsersManagement;
     private final ReportsManager reportsManager;
+    private final MissionValidator validator;
 
     public MissionService(MissionRepository missionRepository) {
         this.missionRepository = missionRepository;
         this.parsersManagement = new ParsersManagement();
         this.reportsManager = new ReportsManager();
+        this.validator = new MissionValidator();
     }
 
     public List<String> validateMission(MissionEntity mission) {
-        List<String> warnings = new ArrayList<>();
-        if (isEmpty(mission.getMissionId())) warnings.add("! missionId не заполнен");
-        if (isEmpty(mission.getDate())) warnings.add("! date не заполнен");
-        if (isEmpty(mission.getLocation())) warnings.add("! location не заполнен");
-        if (mission.getOutcome() == null) warnings.add("! outcome не указан");
-        if (mission.getCurse() == null) {
-            warnings.add("! curse отсутствует");
-        } else {
-            if (isEmpty(mission.getCurse().getName())) warnings.add("! curse.name не заполнен");
-        }
-        return warnings;
+        return validator.validateWithWarnings(mission);
     }
+
 
     public MissionEntity saveMission(MissionEntity mission) {
         mission.setUpdatedAt(LocalDateTime.now());
@@ -104,7 +98,7 @@ public class MissionService {
 
     private boolean isEmpty(String s) { return s == null || s.isBlank(); }
 
-    private void updateEntity(MissionEntity target, MissionEntity source) {
+   /* private void updateEntity(MissionEntity target, MissionEntity source) {
         if (source.getDate() != null) target.setDate(source.getDate());
         if (source.getLocation() != null) target.setLocation(source.getLocation());
         if (source.getOutcome() != null) target.setOutcome(source.getOutcome());
@@ -140,6 +134,40 @@ public class MissionService {
             source.getOperationTimeline().forEach(e -> { e.setMission(target); newList.add(e); });
             target.getOperationTimeline().clear();
             target.getOperationTimeline().addAll(newList);
+        }
+    }*/
+
+    private void updateEntity(MissionEntity target, MissionEntity source) {
+        target.setDate(source.getDate());
+        target.setLocation(source.getLocation());
+        target.setOutcome(source.getOutcome());
+        target.setDamageCost(source.getDamageCost());
+        target.setNotes(source.getNotes());            // затрёт, если null
+        target.setComment(source.getComment());          // затрёт, если null
+        target.setCurse(source.getCurse());              // затрёт, если null
+        target.setEconomicAssessment(source.getEconomicAssessment());
+        target.setEnemyActivity(source.getEnemyActivity());
+        target.setEnvironment(source.getEnvironment());
+        target.setCivilianImpact(source.getCivilianImpact());
+        target.setOperationTags(source.getOperationTags());
+        target.setSupportUnits(source.getSupportUnits());
+        target.setRecommendations(source.getRecommendations());
+        target.setArtifactsRecovered(source.getArtifactsRecovered());
+        target.setEvacuationZones(source.getEvacuationZones());
+        target.setStatusEffects(source.getStatusEffects());
+
+        // Коллекции — только если не null
+        if (source.getSorcerers() != null) {
+            target.getSorcerers().clear();
+            source.getSorcerers().forEach(s -> { s.setMission(target); target.getSorcerers().add(s); });
+        }
+        if (source.getTechniques() != null) {
+            target.getTechniques().clear();
+            source.getTechniques().forEach(t -> { t.setMission(target); target.getTechniques().add(t); });
+        }
+        if (source.getOperationTimeline() != null) {
+            target.getOperationTimeline().clear();
+            source.getOperationTimeline().forEach(e -> { e.setMission(target); target.getOperationTimeline().add(e); });
         }
     }
 }
