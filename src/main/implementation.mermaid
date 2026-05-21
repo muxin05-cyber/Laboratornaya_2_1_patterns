@@ -334,7 +334,7 @@ classDiagram
     }
 
 %% Управление
-    class defaultPackage.Management.ReportsManager {
+    class ReportsManager {
         -currentReportType: String
         -reportTypes: HashMap~String, String~
         +setReportBuilderByName(reportName) String
@@ -344,15 +344,15 @@ classDiagram
         +getReportTypes() String[]
     }
 
-    class defaultPackage.Management.ParsersManagement {
+    class ParsersManagement {
         -parsers: List~CommonParser~
         +FileProcessing(filepath) Pair~Mission, String~
     }
 
-    class defaultPackage.Management.GenericControl {
-        -window: defaultPackage.Management.Basic_window
-        -parsersManagement: defaultPackage.Management.ParsersManagement
-        -reportsManager: defaultPackage.Management.ReportsManager
+    class GenericControl {
+        -window: Basic_window
+        -parsersManagement: ParsersManagement
+        -reportsManager: ReportsManager
         +getView(filepath) String
         +setReportBuilder(name) void
         +getReportTypes() String[]
@@ -458,9 +458,9 @@ classDiagram
     ReportDirector --> ReportBuilder : uses
     ReportDirector --> ReportComponent : returns
 
-    defaultPackage.Management.ReportsManager --> ReportDirector : creates
-    defaultPackage.Management.ReportsManager --> Mission : uses
-    defaultPackage.Management.GenericControl --> defaultPackage.Management.ParsersManagement : uses
-    defaultPackage.Management.GenericControl --> defaultPackage.Management.ReportsManager : uses
-    defaultPackage.Management.ParsersManagement --> CommonParser : uses
-    defaultPackage.Management.ParsersManagement --> Mission : returns
+    ReportsManager --> ReportDirector : creates
+    ReportsManager --> Mission : uses
+    GenericControl --> ParsersManagement : uses
+    GenericControl --> ReportsManager : uses
+    ParsersManagement --> CommonParser : uses
+    ParsersManagement --> Mission : returns
