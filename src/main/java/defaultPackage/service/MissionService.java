@@ -98,53 +98,15 @@ public class MissionService {
 
     private boolean isEmpty(String s) { return s == null || s.isBlank(); }
 
-   /* private void updateEntity(MissionEntity target, MissionEntity source) {
-        if (source.getDate() != null) target.setDate(source.getDate());
-        if (source.getLocation() != null) target.setLocation(source.getLocation());
-        if (source.getOutcome() != null) target.setOutcome(source.getOutcome());
-        target.setDamageCost(source.getDamageCost());
-        if (source.getNotes() != null) target.setNotes(source.getNotes());
-        if (source.getComment() != null) target.setComment(source.getComment());
-        if (source.getCurse() != null) target.setCurse(source.getCurse());
-        if (source.getEconomicAssessment() != null) target.setEconomicAssessment(source.getEconomicAssessment());
-        if (source.getEnemyActivity() != null) target.setEnemyActivity(source.getEnemyActivity());
-        if (source.getEnvironment() != null) target.setEnvironment(source.getEnvironment());
-        if (source.getCivilianImpact() != null) target.setCivilianImpact(source.getCivilianImpact());
-        if (source.getOperationTags() != null) target.setOperationTags(source.getOperationTags());
-        if (source.getSupportUnits() != null) target.setSupportUnits(source.getSupportUnits());
-        if (source.getRecommendations() != null) target.setRecommendations(source.getRecommendations());
-        if (source.getArtifactsRecovered() != null) target.setArtifactsRecovered(source.getArtifactsRecovered());
-        if (source.getEvacuationZones() != null) target.setEvacuationZones(source.getEvacuationZones());
-        if (source.getStatusEffects() != null) target.setStatusEffects(source.getStatusEffects());
-
-        if (source.getSorcerers() != null) {
-            List<SorcererEntity> newList = new ArrayList<>();
-            source.getSorcerers().forEach(s -> { s.setMission(target); newList.add(s); });
-            target.getSorcerers().clear();
-            target.getSorcerers().addAll(newList);
-        }
-        if (source.getTechniques() != null) {
-            List<TechniqueEntity> newList = new ArrayList<>();
-            source.getTechniques().forEach(t -> { t.setMission(target); newList.add(t); });
-            target.getTechniques().clear();
-            target.getTechniques().addAll(newList);
-        }
-        if (source.getOperationTimeline() != null) {
-            List<OperationEventEntity> newList = new ArrayList<>();
-            source.getOperationTimeline().forEach(e -> { e.setMission(target); newList.add(e); });
-            target.getOperationTimeline().clear();
-            target.getOperationTimeline().addAll(newList);
-        }
-    }*/
 
     private void updateEntity(MissionEntity target, MissionEntity source) {
         target.setDate(source.getDate());
         target.setLocation(source.getLocation());
         target.setOutcome(source.getOutcome());
         target.setDamageCost(source.getDamageCost());
-        target.setNotes(source.getNotes());            // затрёт, если null
-        target.setComment(source.getComment());          // затрёт, если null
-        target.setCurse(source.getCurse());              // затрёт, если null
+        target.setNotes(source.getNotes());
+        target.setComment(source.getComment());
+        target.setCurse(source.getCurse());
         target.setEconomicAssessment(source.getEconomicAssessment());
         target.setEnemyActivity(source.getEnemyActivity());
         target.setEnvironment(source.getEnvironment());
@@ -155,8 +117,6 @@ public class MissionService {
         target.setArtifactsRecovered(source.getArtifactsRecovered());
         target.setEvacuationZones(source.getEvacuationZones());
         target.setStatusEffects(source.getStatusEffects());
-
-        // Коллекции — только если не null
         if (source.getSorcerers() != null) {
             target.getSorcerers().clear();
             source.getSorcerers().forEach(s -> { s.setMission(target); target.getSorcerers().add(s); });
