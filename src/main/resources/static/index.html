@@ -576,13 +576,12 @@
                     <th>Дата</th>
                     <th>Локация</th>
                     <th>Результат</th>
-                    <th>Проклятие</th>
                     <th>Изменено</th>
                 </tr>
                 </thead>
                 <tbody id="archiveTableBody">
                 <tr>
-                    <td colspan="7">
+                    <td colspan="6">
                         <div class="empty-state">
                             <div class="empty-state-icon">📭</div>
                             <p>Нажмите «Обновить», чтобы загрузить список миссий</p>
@@ -683,9 +682,7 @@
                     <td onclick="document.getElementById('missionIdInput').value='${m.missionId || ''}'" style="cursor:pointer">
                         ${outcomeBadge}
                     </td>
-                    <td onclick="document.getElementById('missionIdInput').value='${m.missionId || ''}'" style="cursor:pointer">
-                        ${m.curseName || '—'}
-                    </td>
+
                     <td style="font-size:12px;color:var(--text-muted)">${formatDate(m.updatedAt)}</td>
                     <td>
                         <button class="btn btn-danger" onclick="deleteMission('${m.missionId}')" title="Удалить миссию">
